@@ -1,11 +1,17 @@
 #include "HoltzLib.h"
 /*
-  Morse.cpp - Library for flashing Morse code.
-  Created by David A. Mellis, November 2, 2007.
-  Updated by Jason A. Cox, February 18, 2023.
+  HoltzLib.cpp - A library for simple abstractions for common components.
+  Created and maintained by Kyle Holtz for EDD
   Released into the public domain.
 */
 
+/**
+ * Constructs a DCMotor using the L298N motor controller.
+ * @param in1 The arduino pin connected to in1 or in3 on the motor controller.
+ * @param in2 The arduino pin connected to in2 or in4 on the motor controller.
+ * @param in3 The arduino pin connected to ENA or ENB on the motor controller. Must be PWM. 
+ * @param reversed If true, the motor will run backwards. Useful if two motors are facing opposite directions.
+ */
 DCMotor::DCMotor(uint8_t in1, uint8_t in2, uint8_t powerPin, boolean reversed)
 {
   this->in1 = in1;
@@ -18,6 +24,12 @@ DCMotor::DCMotor(uint8_t in1, uint8_t in2, uint8_t powerPin, boolean reversed)
   pinMode(powerPin, OUTPUT);
 }
 
+/**
+ * Constructs a DCMotor using the L298N motor controller.
+ * @param in1 The arduino pin connected to in1 or in3 on the motor controller.
+ * @param in2 The arduino pin connected to in2 or in4 on the motor controller.
+ * @param in3 The arduino pin connected to ENA or ENB on the motor controller. Must be PWM. 
+ */
 DCMotor::DCMotor(uint8_t in1, uint8_t in2, uint8_t powerPin)
 {
   this->in1 = in1;
@@ -30,6 +42,11 @@ DCMotor::DCMotor(uint8_t in1, uint8_t in2, uint8_t powerPin)
   pinMode(powerPin, OUTPUT);
 }
 
+/**
+ * Drive the the motor with a given power and direction.
+ * @param power The power the motor will be driven at. Must be in the range [0,255]
+ * @param reverse If true, the motor will be driven in reverse. If false, it will drive forward. 
+ */
 void DCMotor::drive(int power, boolean reverse)
 {
   if ((reversed && reverse) || (!reversed && !reverse))
@@ -46,11 +63,20 @@ void DCMotor::drive(int power, boolean reverse)
   analogWrite(powerPin, power);
 }
 
+/**
+ * Drive the the motor with a given power.
+ * @param power The power the motor will be driven at. Must be in the range [0,255]
+ */
 void DCMotor::drive(int power)
 {
   drive(power, false);
 }
 
+/**
+ * Constructs an Ultrasonic Sensor
+ * @param trig The pin on the arduino connected to the trig pin of the sensor.
+ * @param echo The pin on the arduino connected to the echo pin of the sensor.
+ */
 UltrasonicSensor::UltrasonicSensor(uint8_t trig, uint8_t echo)
 {
   this->trig = trig;
@@ -60,6 +86,10 @@ UltrasonicSensor::UltrasonicSensor(uint8_t trig, uint8_t echo)
   pinMode(echo, INPUT);
 }
 
+/**
+ * Get the distance reading of the ultrasonic sensor in centimeters.
+ * @return distance in centimeters. 
+ */
 float UltrasonicSensor::getDistance()
 {
   digitalWrite(trig, LOW);
