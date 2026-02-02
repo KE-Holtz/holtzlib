@@ -46,7 +46,7 @@ private:
 public:
   Interrupter(uint8_t pin);
 protected:
-  void attach(int mode = RISING);
+  boolean attach(int mode = RISING);
   void detatch();
 
   virtual void onInterrupt() = 0;
@@ -66,7 +66,7 @@ private:
 public:
   RotaryEncoder(uint8_t out, int slots = 20, DCMotor *motor = nullptr);
 
-  void begin();
+  boolean begin();
   void reset();
 
   float getDegrees();

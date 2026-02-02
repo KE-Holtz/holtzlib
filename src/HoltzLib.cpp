@@ -111,12 +111,21 @@ float UltrasonicSensor::getDistance()
 
 Interrupter* Interrupter::instances[2] = { nullptr, nullptr};
 
+/**
+ * A generic class that represents any system with an interrupt.
+ * This allows classes to have non-static methods be called by interrupts.
+ * @param pin The pin that the interrupt will be on. Only some pins can have interrupts attached to them.
+ * On the Arduino UNO, these are pins 2 and 3
+ */
 Interrupter::Interrupter(uint8_t pin)
 :pin(pin), interruptNum(digitalPinToInterrupt(pin))
 {
 }
 
-
+/**
+ * Attaches the interrupt
+ * @param mode The mode of the interrupt
+ */
 boolean Interrupter::attach(int mode){
   if (interruptNum == NOT_AN_INTERRUPT)
   {
@@ -138,6 +147,9 @@ boolean Interrupter::attach(int mode){
   return true;
 }
 
+/**
+ * Detaches the interrupt
+ */
 void Interrupter::detatch(){
   detachInterrupt(interruptNum);
   instances[interruptNum] = nullptr;
@@ -145,12 +157,22 @@ void Interrupter::detatch(){
 
 
 
-
+/**
+ * Creates an optical rotary encoder.
+ * @param out The output pin of the encoder. MUST be a pin with an interrupt (2 or 3 on Arduino UNO)
+ * @param slots The number of slots in the wheel. Default 20
+ * @param motor The motor that the encoder is attached to. (Optional)
+ */
 RotaryEncoder::RotaryEncoder(uint8_t out, int slots, DCMotor *motor)
     :Interrupter(out), slots(slots), motor(motor), slotsPassed(0)
 {
 }
 
+/**
+ * Runs whenever the slot is passed. If there is a motor, 
+ * it will add or subract from the count based on the direction of the motor. 
+ * If there is no motor, it will only add, and has no way to know the direction.
+ */
 void RotaryEncoder::onInterrupt()
 {
   if (motor != nullptr)
@@ -170,11 +192,18 @@ void RotaryEncoder::onInterrupt()
   }
 }
 
+/**
+ * Start and attach the rotary encoder.
+ * @return True if the out pin is a valid interrupt pin (2 or 3 on an Arduino Uno), otherwise false.
+ */
 boolean RotaryEncoder::begin()
 {
   return attach();
 }
 
+/**
+ * Resets the count of the encoder to zero.
+ */
 void RotaryEncoder::reset()
 {
   noInterrupts();
@@ -182,11 +211,17 @@ void RotaryEncoder::reset()
   interrupts();
 }
 
+/**
+ * Get the encoder's measured angle in degrees.
+ */
 float RotaryEncoder::getDegrees()
 {
   return getRotations() * 360;
 }
 
+/**
+ * Get the encoder's measured angle in rotations.
+ */
 float RotaryEncoder::getRotations()
 {
   int slotsPassedCopy;
@@ -196,6 +231,9 @@ float RotaryEncoder::getRotations()
   return ((float)slotsPassedCopy) / slots;
 }
 
+/**
+ * Get the distance traveled by the wheel the encoder is measuring.
+ */
 float RotaryEncoder::getDistance(float wheelDiameter)
 {
   return getRotations() * PI * wheelDiameter;
