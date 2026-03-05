@@ -69,9 +69,14 @@ public:
   boolean begin();
   void reset();
 
-  float getDegrees();
   float getRotations();
-  float getDistance(float wheelDiameter);
+  float getDegrees();
+  float getRadians();
+  
+  float getDistanceTraveled(float wheelDiameter);
+  float getRobotTurnRotations(float wheelDiameter, float robotDiameter);
+  float getRobotTurnDegrees(float wheelDiameter, float robotDiameter);
+  float getRobotTurnRadians(float wheelDiameter, float robotDiameter);
 
 protected:
   void onInterrupt() override;

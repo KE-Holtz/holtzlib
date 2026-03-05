@@ -212,15 +212,7 @@ void RotaryEncoder::reset()
 }
 
 /**
- * Get the encoder's measured angle in degrees.
- */
-float RotaryEncoder::getDegrees()
-{
-  return getRotations() * 360;
-}
-
-/**
- * Get the encoder's measured angle in rotations.
+ * Get the number of rotations the encoder has passed through.
  */
 float RotaryEncoder::getRotations()
 {
@@ -232,9 +224,46 @@ float RotaryEncoder::getRotations()
 }
 
 /**
+ * Get the number of degrees the encoder has passed through.
+ */
+float RotaryEncoder::getDegrees()
+{
+  return getRotations() * 360;
+}
+
+float RotaryEncoder::getRadians(){
+  return getRotations() * 2 * PI;
+}
+
+/**
  * Get the distance traveled by the wheel the encoder is measuring.
  */
-float RotaryEncoder::getDistance(float wheelDiameter)
+float RotaryEncoder::getDistanceTraveled(float wheelDiameter)
 {
   return getRotations() * PI * wheelDiameter;
+}
+
+/**
+ * Get the angle that the robot has turned in rotations. This ONLY applies to a "two wheel turn",
+ * where one motor spins in one direction, and the other spins the opposite direction.
+ */
+float RotaryEncoder::getRobotTurnRotations(float wheelDiameter, float robotDiameter){
+  return getDistanceTraveled(wheelDiameter) / (PI * robotDiameter);
+}
+
+
+/**
+ * Get the angle that the robot has turned in degrees. This ONLY applies to a "two wheel turn",
+ * where one motor spins in one direction, and the other spins the opposite direction.
+ */
+float RotaryEncoder::getRobotTurnDegrees(float wheelDiameter, float robotDiameter){
+  return getRobotTurnRotations(wheelDiameter, robotDiameter) * 360;
+}
+
+/**
+ * Get the angle that the robot has turned in radians. This ONLY applies to a "0ne wheel turn", where this motor turns the robot.
+ * There is a dedicated method for two wheels in opposite directions. 
+ */
+float RotaryEncoder::getRobotTurnRadians(float wheelDiameter, float robotDiameter){
+  return getRobotTurnRotations(wheelDiameter, robotDiameter) * 2 * PI;
 }
