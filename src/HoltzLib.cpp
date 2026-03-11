@@ -168,6 +168,11 @@ RotaryEncoder::RotaryEncoder(uint8_t out, int slots, DCMotor *motor)
 {
 }
 
+RotaryEncoder::RotaryEncoder(uint8_t out, DCMotor *motor)
+:RotaryEncoder(out, 20, motor)
+{
+}
+
 /**
  * Runs whenever the slot is passed. If there is a motor, 
  * it will add or subract from the count based on the direction of the motor. 

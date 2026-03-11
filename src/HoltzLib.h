@@ -65,6 +65,7 @@ private:
 
 public:
   RotaryEncoder(uint8_t out, int slots = 20, DCMotor *motor = nullptr);
+  RotaryEncoder(uint8_t out, DCMotor *motor);
 
   boolean begin();
   void reset();
